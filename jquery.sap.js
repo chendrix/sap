@@ -29,14 +29,18 @@
         var top = theWindow.scrollTop();
         var docheight = $(document).height();
         var offset = (top + options.distanceFromTheTop + $objizzle.height()) - (docheight - options.distanceFromTheBottom);
+        var validBottomDistance = ($objizzle.offset().top) < (docheight - options.distanceFromTheBottom);
         
-       
-
-        // top + options.distanceFromTheTop + objizzle.height() gives the absolute distance to the
-        // bottom of the object. When this is greater than docheight - options.distanceFromTheBottom
-        // start decrementing the top value by the offset
+        /*  top + options.distanceFromTheTop + objizzle.height() gives the absolute distance to the
+        *   bottom of the object. When this is greater than docheight - options.distanceFromTheBottom
+        *   start decrementing the top value by the offset
+        *   
+        *   If the objizzle.offset().top is greater than docheight - options.distanceFromTheTop, then the user
+        *   has placed in an invalid distanceFromTheTop which places it higher than it currently resides in the
+        *   document. In this instance, keep it position: relative
+        */
         
-        if ((top + options.distanceFromTheTop) > $objizzle.offset().top)
+        if ((top + options.distanceFromTheTop) > $objizzle.offset().top && validBottomDistance)
         {   
            
             $objizzle.css({
@@ -60,7 +64,7 @@
             });
         }
 
-        if ( $objizzle.css('position') == 'fixed' && offset > 0) {
+        if (offset > 0 && validBottomDistance) {
             $objizzle.css({
                 top: options.distanceFromTheTop - offset + 'px'
             });
