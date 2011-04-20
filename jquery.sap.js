@@ -36,24 +36,13 @@
         // bottom of the object. When this is greater than docheight - options.distanceFromTheBottom
         // start decrementing the top value by the offset
         
-        var newTop = 0;
-
         if ((top + options.distanceFromTheTop) > $objizzle.offset().top)
         {   
            
-
-            if (offset < 0) {
-                newTop = options.distanceFromTheTop;
-            }
-            else {
-                console.log("success");
-                newTop = options.distanceFromTheTop - offset;
-            }
-
             $objizzle.css({
                 position: 'fixed',
                 width: width,
-                top: newTop + 'px'
+                top: options.distanceFromTheTop + 'px'
             });
             
             $shim.css({width: width, height: $objizzle.height()});
@@ -68,6 +57,12 @@
                 position: 'relative',
                 width: width,
                 top: ''
+            });
+        }
+
+        if ( $objizzle.css('position') == 'fixed' && offset > 0) {
+            $objizzle.css({
+                top: options.distanceFromTheTop - offset + 'px'
             });
         }
     });
