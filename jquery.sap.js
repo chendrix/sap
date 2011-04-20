@@ -11,7 +11,8 @@
     $.fn.sap = function(options) {
   
     var defaults = {  
-        distanceFromTheTop: 0
+        distanceFromTheTop: 0,
+        distanceFromTheBottom: 0
     };  
                   
     options = $.extend(defaults, options);
@@ -26,18 +27,39 @@
     theWindow.scroll(function() {
 
         var top = theWindow.scrollTop();
+        var docheight = $(document).height();
+        var offset = (top + options.distanceFromTheTop + $objizzle.height()) - (docheight - options.distanceFromTheBottom);
         
+       
+
+        // top + options.distanceFromTheTop + objizzle.height() gives the absolute distance to the
+        // bottom of the object. When this is greater than docheight - options.distanceFromTheBottom
+        // start decrementing the top value by the offset
+        
+        var newTop = 0;
+
         if ((top + options.distanceFromTheTop) > $objizzle.offset().top)
-        {
+        {   
+           
+
+            if (offset < 0) {
+                newTop = options.distanceFromTheTop;
+            }
+            else {
+                console.log("success");
+                newTop = options.distanceFromTheTop - offset;
+            }
+
             $objizzle.css({
                 position: 'fixed',
                 width: width,
-                top: options.distanceFromTheTop + 'px'
+                top: newTop + 'px'
             });
             
             $shim.css({width: width, height: $objizzle.height()});
             
             $objizzle.before($shim);
+
         }
         else if (top + options.distanceFromTheTop < oldTop) 
         {
